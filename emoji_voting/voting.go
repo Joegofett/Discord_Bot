@@ -2,7 +2,6 @@ package voting
 
 import (
 	"github.com/bwmarrin/discordgo"
-
 )
 
 // Emoji's need to be unicode so making them all var's here at the top
@@ -18,8 +17,6 @@ var number7 = "7️⃣"
 var number8 = "8️⃣"
 var number9 = "9️⃣"
 var number10 = "🔟"
-
-
 
 func Emoji(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == "Meow: What day is everyone available?" {
@@ -41,5 +38,4 @@ func Emoji(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.MessageReactionAdd(m.ChannelID, m.ID, number10)
 	}
 
-}
 }

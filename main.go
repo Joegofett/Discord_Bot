@@ -59,7 +59,7 @@ func EmojiMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
 		// This is for polls for what day's they want to play
-		//voting.Emoji(s, m)
+		emoji_voting.voting.Emoji(s, m)
 	}
 }
 
