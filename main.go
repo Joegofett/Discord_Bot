@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	//e "github.com/joegofett/Discord_Bot"
 )
 
 //These
@@ -59,7 +60,7 @@ func EmojiMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
 		// This is for polls for what day's they want to play
-		emoji_voting.voting.Emoji(s, m)
+		//e.emoji_voting.voting.Emoji(s, m)
 	}
 }
 
