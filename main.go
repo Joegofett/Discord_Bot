@@ -5,12 +5,11 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"regexp"
+	"strings"
 	"syscall"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	//e "github.com/joegofett/Discord_Bot"
 )
 
 //These
@@ -71,11 +70,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if m.Content == "!" {
-		re := regexp.MustCompile(`!.?`)
-		stonk := re.FindString(m.Message.Content)
+	if strings.Contains(m.Content, "$") {
 
-		s.ChannelMessageSend(m.ChannelID, stonk)
+		stonk := strings.SplitAfter(m.Content, "$")
+		final := e.tradingView.tradingView()(stonk[1])
+		// api for alpha vantage Z9UV9H5T3B21O67G
+
+		s.ChannelMessageSend(m.ChannelID, final)
 	}
 
 	if m.Content == "&Time" {
