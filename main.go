@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	e "github.com/Joegofett/Discord_bot"
 	"github.com/bwmarrin/discordgo"
 )
 
