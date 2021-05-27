@@ -1,5 +1,3 @@
-github.com/Joegofett/Discord_bot v0.0.0-20210518134003-ca39f13ccf0a h1:xCEPWExFGDvPm4K04FsYc5XQn9v+9Q+V/UoAD6q1GA0=
-github.com/Joegofett/Discord_bot v0.0.0-20210518134003-ca39f13ccf0a/go.mod h1:5y7gbueC8quehrVxctvvdqbCwLmIKjR04h49Y5NMNe8=
 github.com/bwmarrin/discordgo v0.23.2 h1:BzrtTktixGHIu9Tt7dEE6diysEF9HWnXeHuoJEt2fH4=
 github.com/bwmarrin/discordgo v0.23.2/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=

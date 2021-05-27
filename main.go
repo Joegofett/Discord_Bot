@@ -8,24 +8,16 @@ import (
 	"strings"
 	"syscall"
 	"time"
-	t "github.com/joegofett/discord_bot/tradingView"
-	v "github.com/joegofett/discord_bot/emoji_voting"
+
 	"github.com/bwmarrin/discordgo"
+	v "github.com/joegofett/discord_bot/emoji_voting"
+	t "github.com/joegofett/discord_bot/tradingView"
 )
 
 //These
 var day = 5
-var hour = 7
-var min = 15
-
-// Emoji's need to be unicode so making them all var's here at the top
-var number4 = "4️⃣"
-var number5 = "5️⃣"
-var number6 = "6️⃣"
-var number7 = "7️⃣"
-var number8 = "8️⃣"
-var number9 = "9️⃣"
-var number10 = "🔟"
+var hour = 11
+var min = 45
 
 func main() {
 	dg, err := discordgo.New("Bot " + "")
@@ -55,9 +47,8 @@ func EmojiMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
 		// This is for polls for what day's they want to play
-		v.emoji_voting.voting.Emoji(s, m)
-			return
-		}
+		v.Emoji(s, m)
+		return
 	}
 }
 
@@ -69,11 +60,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if strings.Contains(m.Content, "$") {
-
-		stonk := strings.SplitAfter(m.Content, "$")
-		final := t.tradingView(stonk[1])
-
-		s.ChannelMessageSend(m.ChannelID, final)
+		t.Message(s, m)
+		return
 	}
 
 	if m.Content == "&Time" {
@@ -88,7 +76,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if hour == time.Now().Hour() {
 			if min == time.Now().Minute() {
 
-				s.ChannelMessageSend(m.ChannelID, "Meow!!! Meow!!!!!! Now that I have everyone's attention it's Friday! It's wins of the week! so let's hear everyone's wins! My win was finding the cat nip bag and getting into when Joe wasn't looking :eyes:")
+				s.ChannelMessageSend(m.ChannelID, "Meow!!! Meow!!!!!! Now that I have everyone's attention it's Friday! It's wins of the week! so let's hear everyone's wins! My win was finding the cat nip bag and getting into it when Joe wasn't looking :eyes: :heart_eyes_cat: ")
 			}
 		}
 	}

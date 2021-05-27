@@ -1,9 +1,11 @@
 package tradingView
 
 import (
-	"encoding/json"
-	"fmt"
+	"bytes"
 	"net/http"
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 type StockData struct {
@@ -20,34 +22,60 @@ type Response struct {
 	Data []StockData `json:"data"`
 }
 
-func tradingView(stonk string) final {
-	
+func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
+	stonk := strings.SplitAfter(m.Content, "$")
+
 	httpClient := http.Client{}
 
-	req, err := http.NewRequest("GET", "https://api.marketstack.com/v1/tickers/" + stonk + "/eod", nil)
-	if err != nil {
-		panic(err)
-	}
+	req, _ := http.NewRequest("GET", "http://api.marketstack.com/v1/tickers/"+stonk[1]+"/eod/latest", nil)
 
 	q := req.URL.Query()
-	q.Add("access_key", "")
+	q.Add("access_key", "5bad3490144c7b35a14f11b47cfcbc1b")
 	req.URL.RawQuery = q.Encode()
 
-	res, err := httpClient.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
+	res, _ := httpClient.Do(req)
 
-	var apiResponse Response
-	json.NewDecoder(res.Body).Decode(&apiResponse)
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	newStr := buf.String()
+	split := strings.SplitAfter(newStr, ",")
+	cleanup := strings.SplitAfter(split[3], ":")
+	close := strings.Split(cleanup[1], ",")
+	//stockDate := strings.SplitAfter(split[13], ":")
 
-	for _, stockData := range apiResponse.Data {
-		final := ("Ticker %s has a day high of %v on %s",
-			stockData.Symbol,
-			stockData.High,
-			stockData.Date)
-		return final
-	}
-	return final
+	s.ChannelMessageSend(m.ChannelID, "The most recent close for "+stonk[1]+" is "+close[0])
 }
+
+//func Stock(stonk string) (high string, symbol string, stockDate string) {
+
+//}
+
+// req, err := http.NewRequest("GET", "https://api.marketstack.com/v1/tickers/"+stonk, nil)
+// if err != nil {
+// 	empty := "empty"
+// 	discard := "discard"
+// 	return err.Error(), empty, discard
+// }
+
+// q := req.URL.Query()
+// q.Add("access_key", "5bad3490144c7b35a14f11b47cfcbc1b")
+// req.URL.RawQuery = q.Encode()
+
+// res, err := httpClient.Do(req)
+// if err != nil {
+// 	empty := "empty"
+// 	discard := "discard"
+// 	return err.Error(), empty, discard
+// }
+// //defer res.Body.Close()
+
+// var apiResponse Response
+// json.NewDecoder(res.Body).Decode(&apiResponse)
+
+// for _, stockData := range apiResponse.Data {
+// 	symbol = (stockData.Symbol)
+// 	stockDate = (stockData.Date)
+// 	high = strconv.FormatFloat(float64(stockData.High), 'E', -1, 32)
+
+// }
+// return high, symbol, stockDate
