@@ -30,7 +30,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 	req, _ := http.NewRequest("GET", "http://api.marketstack.com/v1/tickers/"+stonk[1]+"/eod/latest", nil)
 
 	q := req.URL.Query()
-	q.Add("access_key", "5bad3490144c7b35a14f11b47cfcbc1b")
+	q.Add("access_key", "")
 	req.URL.RawQuery = q.Encode()
 
 	res, _ := httpClient.Do(req)
@@ -39,6 +39,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 	buf.ReadFrom(res.Body)
 	newStr := buf.String()
 	split := strings.SplitAfter(newStr, ",")
+
 	cleanup := strings.SplitAfter(split[3], ":")
 	close := strings.Split(cleanup[1], ",")
 	//stockDate := strings.SplitAfter(split[13], ":")
