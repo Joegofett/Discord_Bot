@@ -16,7 +16,7 @@ import (
 //These
 
 func main() {
-	dg, err := discordgo.New("Bot " + "ODQxMzcxMDU1MTQyMDc2NDQ2.YJlx2w.LDjnOLwsjZMfdcIeXEGYwBGKids")
+	dg, err := discordgo.New("Bot " + "")
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
 		return
