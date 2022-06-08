@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	v "github.com/joegofett/discord_bot/emoji_voting"
@@ -15,12 +14,9 @@ import (
 )
 
 //These
-var day = 5
-var hour = 11
-var min = 45
 
 func main() {
-	dg, err := discordgo.New("Bot " + "")
+	dg, err := discordgo.New("Bot " + "ODQxMzcxMDU1MTQyMDc2NDQ2.YJlx2w.LDjnOLwsjZMfdcIeXEGYwBGKids")
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
 		return
@@ -43,41 +39,61 @@ func main() {
 
 	dg.Close()
 }
-func EmojiMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	if m.Author.ID == s.State.User.ID {
-		// This is for polls for what day's they want to play
-		v.Emoji(s, m)
-		return
-	}
-}
+var day = 5
+var hour = 9
+var min = 5
+
+// func fridayWins(s *discordgo.Session, m *discordgo.MessageCreate) {
+// 	if day == int(time.Now().Weekday()) {
+// 		if hour == time.Now().Hour() {
+// 			if min == time.Now().Minute() {
+// 				room := "847835494343770113"
+// 				s.ChannelMessageSend(room, "testing")
+// 			}
+// 		}
+// 	}
+// }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
-		EmojiMessage(s, m)
+		v.Emoji(s, m)
 		return
+	}
+
+	if strings.Contains(m.Content, "%") {
+
+		t.Crypto(s, m)
 	}
 
 	if strings.Contains(m.Content, "$") {
+		valid := strings.SplitAfter(m.Content, "$")
+		if len(valid[1]) > 6 {
+			s.ChannelMessageSend(m.ChannelID, "Meow? hmmm this doesn't seem right")
+			return
+		}
 		t.Message(s, m)
-		return
+	}
+	if m.Content == "&Among Us" {
+		s.ChannelMessageSend(m.ChannelID, "Meow Meow! What time is everyone available for Among Us? All times EST. Whomever Kills Joe I'mma fite you @Killers (Among us) ")
 	}
 
 	if m.Content == "&Time" {
-		s.ChannelMessageSend(m.ChannelID, "Meow Meow! What time is everyone available tommorrow for a happy hour? All times EST")
+		s.ChannelMessageSend(m.ChannelID, "Meow Meow! What time is everyone available? All times EST")
 	}
 	if m.Content == "&Day" {
 
 		s.ChannelMessageSend(m.ChannelID, "Meow: What day is everyone available?")
 	}
+	// if day == int(time.Now().Weekday()) {
+	// 	if hour == time.Now().Hour() {
+	// 		if min == time.Now().Minute() {
+	if m.Content == "&Friday" {
 
-	if day == int(time.Now().Weekday()) {
-		if hour == time.Now().Hour() {
-			if min == time.Now().Minute() {
-
-				s.ChannelMessageSend(m.ChannelID, "Meow!!! Meow!!!!!! Now that I have everyone's attention it's Friday! It's wins of the week! so let's hear everyone's wins! My win was finding the cat nip bag and getting into it when Joe wasn't looking :eyes: :heart_eyes_cat: ")
-			}
-		}
+		s.ChannelMessageSend(m.ChannelID, "Meow!!! Meow!!!!!! Now that I have everyone's attention it's Friday! It's wins of the week! so let's hear everyone's wins! My win was jumping on the high beam in the house :smiley_cat: :heart_eyes_cat: ")
+		fmt.Println(m.ChannelID)
 	}
+	// }
+	// }
 }

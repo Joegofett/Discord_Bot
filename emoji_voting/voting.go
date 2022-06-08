@@ -30,7 +30,7 @@ func Emoji(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	//This is for polls for what time everyone is available all time EST
-	if m.Content == "Meow Meow! What time is everyone available today? All times EST" {
+	if m.Content == "Meow Meow! What time is everyone available? All times EST" {
 		s.MessageReactionAdd(m.ChannelID, m.ID, number6)
 		s.MessageReactionAdd(m.ChannelID, m.ID, number7)
 		s.MessageReactionAdd(m.ChannelID, m.ID, number8)
@@ -38,4 +38,12 @@ func Emoji(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.MessageReactionAdd(m.ChannelID, m.ID, number10)
 	}
 
+	//This is for polls for what time everyone is available all time EST
+	if m.Content == "Meow Meow! What time is everyone available for Among Us? All times EST. Whomever Kills Joe I'mma fite you @Killers (Among us)" {
+		s.MessageReactionAdd(m.ChannelID, m.ID, number6)
+		s.MessageReactionAdd(m.ChannelID, m.ID, number7)
+		s.MessageReactionAdd(m.ChannelID, m.ID, number8)
+		s.MessageReactionAdd(m.ChannelID, m.ID, number9)
+		s.MessageReactionAdd(m.ChannelID, m.ID, number10)
+	}
 }

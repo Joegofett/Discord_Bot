@@ -1,25 +1,26 @@
 package tradingView
 
 import (
-	"bytes"
+	//"bytes"
+	"encoding/json"
+	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-type StockData struct {
-	Open   float32 `json:"open"`
-	High   float32 `json:"high"`
-	Low    float32 `json:"low"`
-	Close  float32 `json:"close"`
-	Volume float32 `json:"volume"`
+type TickerData struct {
+	Open   float64 `json:"open"`
+	High   float64 `json:"high"`
+	Low    float64 `json:"low"`
+	Close  float64 `json:"close"`
+	Volume float64 `json:"volume"`
 	Date   string  `json:"date"`
 	Symbol string  `json:"symbol"`
 }
-
-type Response struct {
-	Data []StockData `json:"data"`
+type CryptoData struct {
 }
 
 func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -30,53 +31,52 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 	req, _ := http.NewRequest("GET", "http://api.marketstack.com/v1/tickers/"+stonk[1]+"/eod/latest", nil)
 
 	q := req.URL.Query()
-	q.Add("access_key", "")
+	q.Add("access_key", "78ab56e11bab9073b2681d3c1baa49a7")
 	req.URL.RawQuery = q.Encode()
 
 	res, _ := httpClient.Do(req)
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(res.Body)
-	newStr := buf.String()
-	split := strings.SplitAfter(newStr, ",")
+	data, _ := io.ReadAll(res.Body)
 
-	cleanup := strings.SplitAfter(split[3], ":")
-	close := strings.Split(cleanup[1], ",")
-	//stockDate := strings.SplitAfter(split[13], ":")
-
-	s.ChannelMessageSend(m.ChannelID, "The most recent close for "+stonk[1]+" is "+close[0])
+	var tickerData TickerData
+	err := json.Unmarshal(data, &tickerData)
+	if err != nil {
+		panic(err)
+	}
+	close := strconv.FormatFloat(tickerData.Close, 'f', -1, 32)
+	s.ChannelMessageSend(m.ChannelID, "The most recent close for "+stonk[1]+" is "+close)
 }
 
-//func Stock(stonk string) (high string, symbol string, stockDate string) {
+func Crypto(s *discordgo.Session, m *discordgo.MessageCreate) {
+	crypto := strings.SplitAfter(m.Content, "%")
 
-//}
+	httpClient := http.Client{}
 
-// req, err := http.NewRequest("GET", "https://api.marketstack.com/v1/tickers/"+stonk, nil)
-// if err != nil {
-// 	empty := "empty"
-// 	discard := "discard"
-// 	return err.Error(), empty, discard
-// }
+	req, problem := http.NewRequest("GET", "https://api.coingecko.com/api/v3/simple/price?ids="+crypto[1]+"&vs_currencies=USD", nil)
 
-// q := req.URL.Query()
-// q.Add("access_key", "5bad3490144c7b35a14f11b47cfcbc1b")
-// req.URL.RawQuery = q.Encode()
+	if problem != nil {
+		s.ChannelMessageSend(m.ChannelID, "That doesn't seem right")
+		panic(problem)
+	}
+	q := req.URL.Query()
+	req.URL.RawQuery = q.Encode()
 
-// res, err := httpClient.Do(req)
-// if err != nil {
-// 	empty := "empty"
-// 	discard := "discard"
-// 	return err.Error(), empty, discard
-// }
-// //defer res.Body.Close()
+	res, errs := httpClient.Do(req)
+	if errs != nil {
+		panic(errs)
+	}
 
-// var apiResponse Response
-// json.NewDecoder(res.Body).Decode(&apiResponse)
+	data, _ := io.ReadAll(res.Body)
+	// buf := new(bytes.Buffer)
+	// buf.ReadFrom(res.Body)
+	// newStr := buf.String()
+	// new_ish := strings.SplitAfter(newStr, ":")
 
-// for _, stockData := range apiResponse.Data {
-// 	symbol = (stockData.Symbol)
-// 	stockDate = (stockData.Date)
-// 	high = strconv.FormatFloat(float64(stockData.High), 'E', -1, 32)
+	var CryptoData CryptoData
+	err := json.Unmarshal(data, &CryptoData)
+	if err != nil {
+		panic(err)
+	}
 
-// }
-// return high, symbol, stockDate
+	s.ChannelMessageSend(m.ChannelID, "   ")
+}
